@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #2c3e50;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px #000;
+        }
+        .display {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            text-align: right;
+            padding: 20px;
+            font-size: 2em;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            height: 50px;
+            line-height: 50px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            background-color: #3498db;
+            border: none;
+            padding: 20px;
+            font-size: 1.5em;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .button.operator {
+            background-color: #e74c3c;
+        }
+        .button.operator:hover {
+            background-color: #c0392b;
+        }
+        .button.equal {
+            grid-column: span 2;
+            background-color: #27ae60;
+        }
+        .button.equal:hover {
+            background-color: #1e8449;
+        }
+        .button.reset {
+            grid-column: span;
+            background-color: #f39c12;
+        }
+        .button.reset:hover {
+            background-color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <form id="calculator-form">
+            <input type="hidden" name="expression" id="expression">
+            <div class="buttons">
+                <button type="button" class="button" onclick="handleButtonClick('7')">7</button>
+                <button type="button" class="button" onclick="handleButtonClick('8')">8</button>
+                <button type="button" class="button" onclick="handleButtonClick('9')">9</button>
+                <button type="button" class="button operator" onclick="handleButtonClick('+')">+</button>
+
+                <button type="button" class="button" onclick="handleButtonClick('4')">4</button>
+                <button type="button" class="button" onclick="handleButtonClick('5')">5</button>
+                <button type="button" class="button" onclick="handleButtonClick('6')">6</button>
+                <button type="button" class="button operator" onclick="handleButtonClick('-')">-</button>
+
+                <button type="button" class="button" onclick="handleButtonClick('1')">1</button>
+                <button type="button" class="button" onclick="handleButtonClick('2')">2</button>
+                <button type="button" class="button" onclick="handleButtonClick('3')">3</button>
+                <button type="button" class="button operator" onclick="handleButtonClick('*')">×</button>
+
+                <button type="button" class="button reset" onclick="resetCalculator()">C</button>
+                <button type="button" class="button" onclick="handleButtonClick('0')">0</button>
+                <button type="button" class="button" onclick="handleButtonClick('.')">.</button>
+                <button type="button" class="button operator" onclick="handleButtonClick('/')">÷</button>
+
+                <button type="button" class="button equal" onclick="calculateResult()">=</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        let isResultDisplayed = false;
+
+        function handleButtonClick(value) {
+            const expressionInput = document.getElementById('expression');
+            const display = document.getElementById('display');
+
+            if (isResultDisplayed) {
+                if (['+', '-', '*', '/'].includes(value)) {
+                    // If operator is clicked, use the result as the first number
+                    expressionInput.value = display.textContent + value;
+                    display.textContent = expressionInput.value;
+                } else {
+                    // If number is clicked, start a new expression
+                    expressionInput.value = value;
+                    display.textContent = value;
+                }
+                isResultDisplayed = false;
+            } else {
+                // Append value to the existing expression
+                expressionInput.value += value;
+                display.textContent = expressionInput.value;
+            }
+        }
+
+        function resetCalculator() {
+            document.getElementById('expression').value = '';
+            document.getElementById('display').textContent = '0';
+            isResultDisplayed = false;
+        }
+
+        function calculateResult() {
+            const expressionInput = document.getElementById('expression');
+            const display = document.getElementById('display');
+            const expression = expressionInput.value;
+            try {
+                const result = eval(expression);
+                display.textContent = result;
+                expressionInput.value = result;
+                isResultDisplayed = true;
+            } catch (e) {
+                display.textContent = 'Error';
+                expressionInput.value = '';
+                isResultDisplayed = false;
+            }
+        }
+    </script>
+</body>
+</html>
